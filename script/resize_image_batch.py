@@ -4,9 +4,12 @@ import click
 
 @click.command()
 @click.argument("input_dir", type=str)
-@click.argument("output_dir", type=str)
+@click.option("--output_dir", default=None, type=str)
 def main(input_dir, output_dir):
-    manager = ImageManager(input_dir.encode('ascii'), output_dir.encode('ascii'))
+    input_dir = input_dir.encode('ascii')
+    if output_dir:
+        output_dir = output_dir.encode('ascii')
+    manager = ImageManager(input_dir, output_dir)
     manager.execute_resize(224, 224)
 
 
