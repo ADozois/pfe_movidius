@@ -1,5 +1,5 @@
-from os import listdir
-from os.path import isfile, join, expanduser
+from os import listdir, rename
+from os.path import isfile, join, expanduser, splitext
 from PIL import Image
 import progressbar
 
@@ -33,3 +33,21 @@ class ImageManager:
                 img.save(self._output_dir + image)
                 count += 1
                 bar.update(count)
+
+    #@property.setter
+    #def set_image_dir(self, path):
+    #    self._image_directory = path
+
+    def rename_images_with_pattern(self, pattern):
+        i = 0
+        with progressbar.ProgressBar(max_value=self._number_image) as bar:
+            for image in self.images:
+                extension = self.get_extension(image)
+                rename(self._image_directory + image, self._image_directory + pattern + "_" + str(i) + extension)
+                i += 1
+                bar.update(i)
+
+    @staticmethod
+    def get_extension(filename):
+        _, extension = splitext(filename)
+        return extension
