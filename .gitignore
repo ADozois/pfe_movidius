@@ -105,3 +105,8 @@ ENV/
 
 #vscode
 .vscode/
+
+#Project
+Images/
+image_test/
+Images_training.zip
