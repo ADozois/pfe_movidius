@@ -1,16 +1,17 @@
-import mvnc.mvncapi as mvnc
+from mvnc import mvncapi as mvnc
 from NCSQueue import NCSQueue
 
 
 class NCS:
     def __init__(self, name, model_path):
         self._device = None
-        self._model = None
+        self._get_device()
+        self._graph = None
         self._input = None
         self._output = None
         self._labels = None
-        self._get_device()
-        self._create_model(name, model_path)
+        self.allocate_model(model_path)
+
 
     @staticmethod
     def _detect_devices():
@@ -22,16 +23,14 @@ class NCS:
     def _get_device(self):
         devices = self._detect_devices()
         self._device = mvnc.Device(devices[0])
+
+    def open_device(self):
         self._device.open()
 
-    def _create_model(self, name, graph_path):
-        self._model = mvnc.Graph(name)
-        graph_to_load = self._load_graph(graph_path)
-        input_fifo, output_fifo = self._model.allocate_with_fifos(self._device, graph_to_load,
-                                                                  input_fifo_data_type=mvnc.FifoDataType.FP16,
-                                                                  output_fifo_data_type=mvnc.FifoDataType.FP16)
-        self._input = input_fifo
-        self._output = output_fifo
+    def allocate_model(self, graph_path):
+        self._graph = mvnc.Graph("test")
+        graph_buffer = self._load_graph(graph_path)
+        self._input, self._output = self._graph.allocate_with_fifos(self._device, graph_buffer)
 
     @staticmethod
     def _load_graph(graph_path):
@@ -39,8 +38,8 @@ class NCS:
             graph_bin = f.read()
         return graph_bin
 
-    def add_image(self, image_tensor):
-        self._input.write_elem(image_tensor, None)
+    def add_image(self, image_tensor, usr_obj=None):
+        self._input.write_elem(image_tensor, usr_obj)
 
     def get_prediction(self):
         if not self._input.empty():
@@ -52,8 +51,8 @@ class NCS:
     def execute_inference(self):
         self._model.queue_inference(self._input, self._output)
 
-    def execute_inference_with_tensor(self, tensor, object=None):
-        self._model.queue_inference_with_fifo_elem(self._input, self._output, tensor, object)
+    def execute_inference_with_tensor(self, tensor, usr_obj=None):
+        self._model.queue_inference_with_fifo_elem(self._input, self._output, tensor, usr_obj)
 
     def close(self):
         self._destroy_queue()
