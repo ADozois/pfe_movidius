@@ -91,18 +91,21 @@ if __name__=="__main__":
 
 
     #detection = NCS(name, graph_path)
-    devices = mvnc.enumerate_devices()
-    device = mvnc.Device(devices[0])
-    device.open()
+    # devices = mvnc.enumerate_devices()
+    # device = mvnc.Device(devices[0])
+    # device.open()
 
-    graph = mvnc.Graph(name)
+    # graph = mvnc.Graph(name)
 
-    with open(graph_path, 'r') as f:
-        graph_buffer = f.read()
+    # with open(graph_path, 'r') as f:
+    #     graph_buffer = f.read()
 
-    fifo_in, fifo_out = graph.allocate_with_fifos(device, graph_buffer, input_fifo_data_type=mvnc.FifoDataType.FP16,
-                                                                     output_fifo_data_type=mvnc.FifoDataType.FP16)
+    # fifo_in, fifo_out = graph.allocate_with_fifos(device, graph_buffer, input_fifo_data_type=mvnc.FifoDataType.FP16,
+    #                                                                  output_fifo_data_type=mvnc.FifoDataType.FP16)
     #
+
+    detection = NCS(name, graph_path)
+
 
     while True:
         _, frame = cam.read()
@@ -111,9 +114,13 @@ if __name__=="__main__":
     #    detection.execute_inference_with_tensor(img)
 
      #   detection.get_prediction()
-        graph.queue_inference_with_fifo_elem(fifo_in, fifo_out, img.astype(np.float16), None)
+        # graph.queue_inference_with_fifo_elem(fifo_in, fifo_out, img.astype(np.float16), None)
 
-        output, usrobj = fifo_out.read_elem()
+        # output, usrobj = fifo_out.read_elem()
+
+        detection.execute_inference_with_tensor(img.astype(np.float16))
+
+        output = detection.get_prediction()
 
         num_valid_boxes = int(output[0])
         print('total num boxes: ' + str(num_valid_boxes))
