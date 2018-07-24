@@ -28,7 +28,7 @@ def write_data_to_file(file, start_list, end_list):
 
 if __name__ == '__main__':
 
-    graph_path = "/model/ssd_caffe/graph"
+    graph_path = "model/ssd_caffe/graph"
     treshold = 0.5
 
     csv_path = "data_delta_ncs.csv"
