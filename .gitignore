@@ -110,3 +110,5 @@ ENV/
 Images/
 image_test/
 Images_training.zip
+*.csv
+
