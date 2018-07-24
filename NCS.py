@@ -68,8 +68,8 @@ class NCS:
         self._output = None
 
     def _destroy_graph(self):
-        self._model.destroy()
-        self._model = None
+        self._graph.destroy()
+        self._graph = None
 
     def _convert_to_label(self, index):
         return self._labels[index]

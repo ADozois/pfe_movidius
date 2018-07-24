@@ -6,6 +6,16 @@ import numpy as np
 import csv
 import datetime
 
+def write_data_to_file(file, start_list, end_list):
+    fieldname = ['delta']
+    with open(file, 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldname)
+
+        for i in range(0, len(start_list)):
+            delta = end_list[i] - start_list[i]
+            writer.writerow({'delta': str(delta)})
+
+
 def load_image_into_numpy_array(image):
   im_width, im_height = image.shape[:2]
   return np.array(image.getdata()).reshape(
@@ -57,22 +67,13 @@ def run_inference_for_single_image(image, graph):
             output_dict['detection_masks'] = output_dict['detection_masks'][0]
         return output_dict
 
-  def write_data_to_file(file, start_list, end_list):
-    fieldname = ['delta']
-    with open(file, 'w') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldname)
-
-    for i in range(0, len(start_list)):
-        delta = end_list[i] - start_list[i]
-        writer.writerow({'delta': str(delta)})
 
 if __name__ == '__main__':
 
     graph = "frozen_inference_graph.pb"
-    label = "label_map.pbtxt"
     treshold = 0.5
 
-    csv_path = "data_delta.csv"
+    csv_path = "data_delta_tf.csv"
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", required=True)
@@ -81,9 +82,6 @@ if __name__ == '__main__':
         
 
     graph_path = os.path.join(dir_path, graph)
-    label_path = os.path.join(dir_path, label)
-
-    print(graph_path)
 
     detection_graph = tf.Graph()
     with detection_graph.as_default():
@@ -100,7 +98,7 @@ if __name__ == '__main__':
     end = []
     print("Starting detection")
     loop_start = datetime.datetime.now()
-    while count <= 100:
+    while count < 100:
         _, frame = cam.read()
 
         #img = load_image_into_numpy_array(frame)
@@ -116,6 +114,9 @@ if __name__ == '__main__':
 
     loop_end = datetime.datetime.now()
     total = loop_end - loop_start
+
+    write_data_to_file(csv_path, start, end)
+
     print("Total time: " + str(total))        
 
     
