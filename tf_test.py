@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     nbr_iter = args.iter
 
-    csv_path = "data_delta_tf.csv"
+    csv_path = "data_delta_tf_" + str(nbr_iter) + ".csv"
         
     print("Loading model")
 

@@ -31,7 +31,15 @@ if __name__ == '__main__':
     graph_path = "model/ssd_caffe/graph"
     treshold = 0.5
 
-    csv_path = "data_delta_ncs.csv"
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--iter', required=True, type=int)
+    args = parser.parse_args()
+
+
+    nbr_iter = args.iter
+
+    csv_path = "data_delta_ncs_" + str(iter) + ".csv"
 
     cam = cv2.VideoCapture(0)
 
