@@ -28,14 +28,24 @@ def write_data_to_file(file, start_list, end_list):
 
 if __name__ == '__main__':
 
-    graph_path = "/home/walle/pfe_movidius/model/ssd_caffe/graph"
+    graph_path = "/model/ssd_caffe/graph"
     treshold = 0.5
 
     csv_path = "data_delta_ncs.csv"
 
     cam = cv2.VideoCapture(0)
 
+    print("Loading model")
+
+    load_start = datetime.datetime.now()
+
     detection = NCS("test", graph_path)
+
+    load_end = datetime.datetime.now()
+    
+    load_delta = load_end - load_start
+
+    print("Model loaded in: " + str(load_delta) + " s")
 
     count = 0
     start = []
@@ -58,14 +68,20 @@ if __name__ == '__main__':
         #         print(output['detection_classes'])
         count += 1
 
+     print("Detection finish")
+
     loop_end = datetime.datetime.now()
-    total = loop_end - loop_start
+    delta_loop = load_end - loop_start
+
+    total = loop_end - load_start
 
     detection.close()
 
     write_data_to_file(csv_path, start, end)
 
-    print("Total time: " + str(total))        
+    print("Detection time: " + str(delta_loop) + " s")
+
+    print("Total time: " + str(total) + " s")        
 
     
 

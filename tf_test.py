@@ -83,6 +83,10 @@ if __name__ == '__main__':
 
     graph_path = os.path.join(dir_path, graph)
 
+    print("Loading model")
+
+    load_start = datetime.datetime.now()
+
     detection_graph = tf.Graph()
     with detection_graph.as_default():
         od_graph_def = tf.GraphDef()
@@ -90,6 +94,12 @@ if __name__ == '__main__':
         serialized_graph = fid.read()
         od_graph_def.ParseFromString(serialized_graph)
         tf.import_graph_def(od_graph_def, name='')
+
+    load_end = datetime.datetime.now()
+    
+    load_delta = load_end - load_start
+
+    print("Model loaded in: " + str(load_delta) + " s")
 
     cam = cv2.VideoCapture(0)
 
@@ -111,13 +121,19 @@ if __name__ == '__main__':
         #     if output['detection_scores'] > treshold:
         #         print(output['detection_classes'])
         count += 1
+    
+    print("Detection finish")
 
     loop_end = datetime.datetime.now()
-    total = loop_end - loop_start
+    delta_loop = load_end - loop_start
+
+    total = loop_end - load_start
 
     write_data_to_file(csv_path, start, end)
 
-    print("Total time: " + str(total))        
+    print("Detection time: " + str(delta_loop) + " s")
+
+    print("Total time: " + str(total) + " s")        
 
     
 
