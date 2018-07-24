@@ -71,7 +71,7 @@ if __name__ == '__main__':
      print("Detection finish")
 
     loop_end = datetime.datetime.now()
-    delta_loop = load_end - loop_start
+    delta_loop = loop_end - loop_start
 
     total = loop_end - load_start
 
