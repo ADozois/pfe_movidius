@@ -60,7 +60,7 @@ if __name__ == '__main__':
     end = []
     print("Starting detection")
     loop_start = datetime.datetime.now()
-    while count < 100:
+    while count < nbr_iter:
         _, frame = cam.read()
 
         img = preprocess_image(frame)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
         #         print(output['detection_classes'])
         count += 1
 
-     print("Detection finish")
+    print("Detection finish")
 
     loop_end = datetime.datetime.now()
     delta_loop = loop_end - loop_start
