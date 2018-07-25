@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     nbr_iter = args.iter
 
-    csv_path = "data_delta_ncs_" + str(iter) + ".csv"
+    csv_path = "data_delta_ncs_" + str(nbr_iter) + ".csv"
 
     cam = cv2.VideoCapture(0)
 
