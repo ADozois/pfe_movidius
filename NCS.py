@@ -3,13 +3,13 @@ from NCSQueue import NCSQueue
 
 
 class NCS:
-    def __init__(self, name, model_path):
+    def __init__(self, name, model_path, labels):
         self._device = None
         self._get_device()
         self._graph = mvnc.Graph(name)
         self._input = None
         self._output = None
-        self._labels = None
+        self._labels = labels
         self.allocate_model(model_path)
 
     @staticmethod
@@ -42,11 +42,9 @@ class NCS:
         self._input.write_elem(image_tensor, usr_obj)
 
     def get_prediction(self):
-       # if not self._input.empty():
-        prediction, _ = self._output.read_elem()
-        return prediction
-       # else:
-       #     return None
+        output, _ = self._output.read_elem()
+
+        return output
 
     def execute_inference(self):
         self._graph.queue_inference(self._input, self._output)
