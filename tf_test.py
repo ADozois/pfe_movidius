@@ -117,6 +117,7 @@ if __name__ == '__main__':
     loop_start = datetime.datetime.now()
 
     with detection_graph.as_default():
+        init_op = tf.global_variables_initializer()
         with tf.Session(graph=detection_graph) as sess:
             
             while count < nbr_iter:

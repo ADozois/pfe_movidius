@@ -26,14 +26,33 @@ sudo apt-get install -y python3-six python3-networkx
 sudo apt-get install -y python-opencv
 
 # Téléchargement du code de Movidius
-mkdir -p ~/workspace
-cd ~/workspace
+cd
+mkdir -p ~/Movidius
+cd ~/Movidius
 git clone -b ncsdk2 https://github.com/movidius/ncsdk.git
-cd ~/workspace/ncsdk/api/src
+
+echo "Quelle version du script vous voulez installer?"
+select ask in "Prod" "Embarque"; do
+    case $ask in
+        Prod ) cd ~/Movidius/ncsdk
+                make
+                sudo make install
+                make examples
+                cd ~/Movidius
+                git clone -b ncsdk2 https://github.com/movidius/ncappzoo.git
+                break;;
+        Embarque )  cd ~/Movidius/ncsdk/api/src
+                    make
+                    sudo make install
+                break;;
+        Annuler ) break;;
+    esac
+done
+
+
 
 # Compilation et installation du code
-make
-sudo make install
+
 
 cd ..
 git clone https://github.com/ADozois/pfe_movidius.git
